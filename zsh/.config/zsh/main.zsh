@@ -27,3 +27,6 @@ alias ...='cd ../..'
 
 # --- NCSU ---
 alias ncsu='ssh dbbakalo@remote.eos.ncsu.edu'
+get_csc230() {
+  scp "dbbakalo@remote.eos.ncsu.edu:/mnt/coe/workspace/csc/CSC230/$1/$2/*" .
+}
