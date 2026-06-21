@@ -8,6 +8,9 @@ SAVEHIST=10000
 setopt HIST_IGNORE_DUPS
 setopt SHARE_HISTORY
 
+# --- Rust (rustup/cargo) ---
+. "$HOME/.cargo/env"
+
 # --- Prompt (Starship) ---
 eval "$(starship init zsh)"
 
@@ -16,6 +19,9 @@ eval "$(fzf --zsh)"
 
 # --- Smarter cd (zoxide) ---
 eval "$(zoxide init zsh)"
+
+# --- Auto-activate virtual envs (direnv) ---
+eval "$(direnv hook zsh)"
 
 # --- Aliases ---
 alias ll='eza -lh'
