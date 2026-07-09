@@ -1,0 +1,147 @@
+# AeroSpace config — https://nikitabobko.github.io/AeroSpace/guide
+# Reload after editing with: alt-shift-c  (or `aerospace reload-config`)
+
+# Config schema version. v2 no longer infers workspaces from bindings, so we
+# declare them explicitly in `persistent-workspaces` below.
+config-version = 2
+
+# Start AeroSpace at login (so you don't have to launch the app manually).
+start-at-login = true
+
+# Workspaces that always exist, even when empty (v2 requires this explicitly).
+persistent-workspaces = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+# Normalizations keep the window tree tidy. Leave on unless you have a reason.
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+# Default layout for a fresh workspace: tiles, auto-picking h/v split by screen shape.
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+
+# --- Gaps (space between windows and screen edges) -------------------------
+[gaps]
+inner.horizontal = 8
+inner.vertical   = 8
+outer.left       = 8
+outer.bottom     = 8
+outer.top        = 8
+outer.right      = 8
+
+# --- Main keybindings ------------------------------------------------------
+# `alt` = the Option key. It's the AeroSpace mod key (i3 convention).
+# Heads-up: alt-<key> chords are captured globally, so if you ever bind
+# Alt/Meta keys inside nvim they'll be intercepted here first. You rarely
+# will, but if it bites you, change the mod (see the note in my message).
+[mode.main.binding]
+
+# Focus a window in a direction (vim hjkl — matches your nvim/tmux muscle memory).
+alt-h = 'focus left'
+alt-j = 'focus down'
+alt-k = 'focus up'
+alt-l = 'focus right'
+
+# Move the focused window in a direction.
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
+
+# Resize the focused window.
+alt-minus  = 'resize smart -50'
+alt-equal  = 'resize smart +50'
+
+# Layouts.
+alt-slash = 'layout tiles horizontal vertical'   # toggle split orientation
+alt-comma = 'layout accordion horizontal vertical' # stacked/accordion view
+alt-f     = 'fullscreen'                          # zoom focused window
+
+# Switch to workspace 1-9.
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
+alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-8 = 'workspace 8'
+alt-9 = 'workspace 9'
+
+# Move focused window to workspace 1-9 (then follow it there).
+alt-shift-1 = ['move-node-to-workspace 1', 'workspace 1']
+alt-shift-2 = ['move-node-to-workspace 2', 'workspace 2']
+alt-shift-3 = ['move-node-to-workspace 3', 'workspace 3']
+alt-shift-4 = ['move-node-to-workspace 4', 'workspace 4']
+alt-shift-5 = ['move-node-to-workspace 5', 'workspace 5']
+alt-shift-6 = ['move-node-to-workspace 6', 'workspace 6']
+alt-shift-7 = ['move-node-to-workspace 7', 'workspace 7']
+alt-shift-8 = ['move-node-to-workspace 8', 'workspace 8']
+alt-shift-9 = ['move-node-to-workspace 9', 'workspace 9']
+
+# Jump back to the previously-focused workspace (like tmux last-window).
+alt-tab = 'workspace-back-and-forth'
+
+# Reload this config file.
+alt-shift-c = 'reload-config'
+
+# Enter "service" mode for less-common actions (press alt-shift-semicolon,
+# then the key, then it auto-returns to main mode).
+alt-shift-semicolon = 'mode service'
+
+# --- Service mode ----------------------------------------------------------
+[mode.service.binding]
+esc          = ['reload-config', 'mode main']
+r            = ['flatten-workspace-tree', 'mode main'] # reset window layout
+f            = ['layout floating tiling', 'mode main'] # toggle floating for window
+backspace    = ['close-all-windows-but-current', 'mode main']
+
+# --- Auto-assign apps to workspaces ---------------------------------------
+# Rules fire when a window is *detected* (opened). Apps already running before
+# a config reload may need a quit/reopen to snap into place.
+# Spotify is intentionally omitted — no rule keeps it unpinned (opens on the
+# active workspace, driven by media keys).
+[[on-window-detected]]
+if.app-id = 'net.kovidgoyal.kitty'
+run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+if.app-id = 'md.obsidian'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'org.mozilla.firefox'
+run = 'move-node-to-workspace 3'
+
+[[on-window-detected]]
+if.app-id = 'com.google.Chrome'
+run = 'move-node-to-workspace 6'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari'
+run = 'move-node-to-workspace 7'
+
+[[on-window-detected]]
+if.app-id = 'com.readdle.SparkDesktop'
+run = 'move-node-to-workspace 8'
+
+[[on-window-detected]]
+if.app-id = 'com.hnc.Discord'
+run = 'move-node-to-workspace 9'
+
+# --- Float transient utility windows --------------------------------------
+# Keeps stray dialogs/utilities from re-tiling a workspace.
+[[on-window-detected]]
+if.app-id = 'com.apple.systempreferences'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.calculator'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.ActivityMonitor'
+run = 'layout floating'
