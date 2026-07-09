@@ -72,7 +72,7 @@ cask "discord"
 cask "emacs-app"
 # Web browser
 cask "firefox"
-cask "font-hack-nerd-font"
+cask "font-jetbrains-mono-nerd-font"
 # Web browser
 cask "google-chrome"
 # Menu bar manager

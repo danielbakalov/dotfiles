@@ -12,17 +12,17 @@ $line_break\
 $character\
 """
 
-palette = "kanagawa"
+palette = "gruvbox_material"
 
-[palettes.kanagawa]
-blue = "#7E9CD8"
-violet = "#957FB8"
-green = "#98BB6C"
-red = "#C34043"
-yellow = "#C0A36E"
-cyan = "#6A9589"
-gray = "#727169"
-dark = "#54546D"
+[palettes.gruvbox_material]
+blue = "#7daea3"
+violet = "#d3869b"
+green = "#a9b665"
+red = "#ea6962"
+yellow = "#d8a657"
+cyan = "#89b482"
+gray = "#928374"
+dark = "#665c54"
 
 [directory]
 style = "bold blue"
