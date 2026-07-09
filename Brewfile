@@ -1,5 +1,7 @@
 tap "d12frosted/emacs-plus"
 tap "nikitabobko/tap"
+# Improved shell history for zsh, bash, fish and nushell
+brew "atuin"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # GNU File, Shell, and Text utilities
@@ -22,6 +24,10 @@ brew "gdb"
 brew "gh"
 # Distributed revision control system
 brew "git"
+# Syntax-highlighting pager for git and diff output
+brew "git-delta"
+# TIFF library and utilities
+brew "libtiff"
 # GNOME XML library
 brew "libxml2"
 # C XSLT library for GNOME
@@ -44,6 +50,8 @@ brew "stow"
 brew "tectonic"
 # Terminal multiplexer
 brew "tmux"
+# Upgrade all the things
+brew "topgrade"
 # Extremely fast Python package installer and resolver, written in Rust
 brew "uv"
 # Shell extension to navigate your filesystem faster
@@ -72,4 +80,6 @@ cask "karabiner-elements"
 # GPU-based terminal emulator
 cask "kitty"
 # Web browser
-cask "librewolf"
+# librewolf cask is deprecated in homebrew/cask (app still installed locally);
+# reinstall from librewolf.net or its official tap if needed on a new machine
+# cask "librewolf"
