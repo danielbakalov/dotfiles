@@ -4,7 +4,6 @@ $c\
 $python\
 $rust\
 $golang\
-$cmd_duration\
 $character\
 """
 
@@ -50,11 +49,6 @@ format = "[$symbol]($style)"
 style = "cyan"
 symbol = " "
 format = "[$symbol]($style)"
-
-[cmd_duration]
-style = "gray"
-format = "[$duration]($style) "
-min_time = 2_000
 
 [character]
 success_symbol = "[❯](bold green)"

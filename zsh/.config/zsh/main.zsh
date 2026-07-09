@@ -44,6 +44,3 @@ get_csc230() {
 # --- Plugins: autosuggestions late, syntax-highlighting always LAST ---
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-# --- Greeting on fresh interactive shells (not a plugin, safe after the sources) ---
-fastfetch

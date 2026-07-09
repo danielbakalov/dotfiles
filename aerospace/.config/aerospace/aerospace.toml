@@ -21,12 +21,12 @@ default-root-container-orientation = 'auto'
 
 # --- Gaps (space between windows and screen edges) -------------------------
 [gaps]
-inner.horizontal = 8
-inner.vertical   = 8
-outer.left       = 8
-outer.bottom     = 8
-outer.top        = 8
-outer.right      = 8
+inner.horizontal = 2
+inner.vertical   = 2
+outer.left       = 2
+outer.bottom     = 2
+outer.top        = 2
+outer.right      = 2
 
 # --- Main keybindings ------------------------------------------------------
 # `alt` = the Option key. It's the AeroSpace mod key (i3 convention).
