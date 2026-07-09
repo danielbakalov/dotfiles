@@ -64,6 +64,8 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 # AeroSpace is an i3-like tiling window manager for macOS
 cask "nikitabobko/tap/aerospace", trusted: true
+# Menu bar tool to limit maximum charging percentage
+cask "aldente"
 # Voice and text chat software
 cask "discord"
 # Text editor
@@ -73,13 +75,15 @@ cask "firefox"
 cask "font-hack-nerd-font"
 # Web browser
 cask "google-chrome"
-# Utility to hide menu bar items
-cask "hiddenbar"
+# Menu bar manager
+cask "jordanbaird-ice"
 # Keyboard customiser
 cask "karabiner-elements"
 # GPU-based terminal emulator
 cask "kitty"
-# Web browser
-# librewolf cask is deprecated in homebrew/cask (app still installed locally);
-# reinstall from librewolf.net or its official tap if needed on a new machine
-# cask "librewolf"
+# Control your tools with a few keystrokes
+cask "raycast"
+# Screenshot measurement and annotation tool
+cask "shottr"
+# System monitor for the menu bar
+cask "stats"
