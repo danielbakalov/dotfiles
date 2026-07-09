@@ -20,7 +20,7 @@ tmux's plugin manager.
 | ---------- | ------------------------------------------- |
 | `zsh`      | shell (`main.zsh`, `.zprofile`, `.zshrc`)   |
 | `git`      | git config                                  |
-| `kitty`    | terminal (Kanagawa theme, auto-tmux)        |
+| `kitty`    | terminal (Gruvbox theme, auto-tmux)        |
 | `tmux`     | multiplexer (C-a prefix, vim panes, TPM)    |
 | `nvim`     | LazyVim                                     |
 | `starship` | prompt                                      |
