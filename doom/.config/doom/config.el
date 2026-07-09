@@ -69,7 +69,13 @@
 (use-package! org-modern
   :after org
   :hook (org-mode . org-modern-mode)
-  :hook (org-agenda-finalize . org-modern-agenda))
+  :hook (org-agenda-finalize . org-modern-agenda)
+  :config
+  ;; Default level-3 pair is ⯈/⯆ (U+2BC8/U+2BC6), which JetBrainsMono NF
+  ;; lacks — it rendered as hex tofu boxes. One (folded . expanded) pair per
+  ;; heading level, all from glyphs the font actually has.
+  (setq org-modern-fold-stars
+        '(("▶" . "▼") ("▷" . "▽") ("▸" . "▾") ("▹" . "▿") ("▶" . "▼"))))
 
 ;; ===========================================================================
 ;; A few keybinds so your .obsidian.vimrc muscle memory carries over.
