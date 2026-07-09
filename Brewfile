@@ -1,7 +1,11 @@
-tap "d12frosted/emacs-plus"
+tap "d12frosted/emacs-plus", trusted: true
 tap "nikitabobko/tap"
 # Improved shell history for zsh, bash, fish and nushell
 brew "atuin"
+# Automatic configure script builder
+brew "autoconf"
+# Tool for generating GNU Standards-compliant Makefiles
+brew "automake"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # GNU File, Shell, and Text utilities
@@ -20,14 +24,14 @@ brew "fzf"
 brew "python@3.14"
 # GNU debugger
 brew "gdb"
+# TIFF library and utilities
+brew "libtiff"
 # GitHub command-line tool
 brew "gh"
 # Distributed revision control system
 brew "git"
 # Syntax-highlighting pager for git and diff output
 brew "git-delta"
-# TIFF library and utilities
-brew "libtiff"
 # GNOME XML library
 brew "libxml2"
 # C XSLT library for GNOME
@@ -36,6 +40,8 @@ brew "libxslt"
 brew "neovim"
 # Open-source, cross-platform JavaScript runtime environment
 brew "node"
+# Swiss-army knife of markup format conversion
+brew "pandoc"
 # PDF rendering library (based on the xpdf-3.0 code base)
 brew "poppler"
 # Interpreted, interactive, object-oriented programming language
@@ -62,6 +68,8 @@ brew "zsh"
 brew "zsh-autosuggestions"
 # Fish shell like syntax highlighting for zsh
 brew "zsh-syntax-highlighting"
+# GNU Emacs text editor
+brew "d12frosted/emacs-plus/emacs-plus@30"
 # AeroSpace is an i3-like tiling window manager for macOS
 cask "nikitabobko/tap/aerospace", trusted: true
 # Menu bar tool to limit maximum charging percentage
@@ -73,6 +81,7 @@ cask "emacs-app"
 # Web browser
 cask "firefox"
 cask "font-jetbrains-mono-nerd-font"
+cask "font-symbols-only-nerd-font"
 # Web browser
 cask "google-chrome"
 # Menu bar manager
