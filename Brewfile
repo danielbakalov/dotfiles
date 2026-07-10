@@ -32,6 +32,8 @@ brew "gh"
 brew "git"
 # Syntax-highlighting pager for git and diff output
 brew "git-delta"
+# Easy plain text accounting with command-line, terminal and web UIs
+brew "hledger"
 # GNOME XML library
 brew "libxml2"
 # C XSLT library for GNOME
