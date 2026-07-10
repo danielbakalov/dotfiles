@@ -27,6 +27,9 @@ eval "$(zoxide init zsh)"
 # --- Auto-activate virtual envs (direnv) ---
 eval "$(direnv hook zsh)"
 
+# --- Finances (hledger commands default to this journal) ---
+export LEDGER_FILE="$HOME/org/finances.org"
+
 # --- Aliases ---
 alias ll='eza -lh'
 alias la='eza -lah'
