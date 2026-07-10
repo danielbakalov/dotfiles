@@ -14,6 +14,13 @@
 
 ;; kitty: font_size 16.0, modify_font cell_height 110%
 (setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 16.0))
+
+;; The gruvbox-material theme scales org headings (1.4x/1.2x/1.1x). Keep the
+;; heading colors but pin them to normal text size.
+(custom-set-faces!
+  '(org-level-1 :height 1.0)
+  '(org-level-2 :height 1.0)
+  '(org-level-3 :height 1.0))
 (setq-default line-spacing 0.1)
 
 ;; kitty: hide_window_decorations + window_padding_width 12.
@@ -30,18 +37,27 @@
 (setq org-directory "~/org/")
 
 (after! org
+  ;; --- habits: consistency graph in the agenda for habits.org entries --------
+  (add-to-list 'org-modules 'org-habit)
+  (require 'org-habit)
+  (setq org-extend-today-until 3    ; the day rolls over at 3am, not midnight
+        org-use-effective-time t)   ; late-night DONEs log against the day just ending
+
   ;; --- what the agenda scans -------------------------------------------------
   (setq org-agenda-files
         (list "~/school/2026 Summer/"   ; school (synced to Boox) — change when the semester rolls over
-              "~/org/"))                 ; personal (local only): inbox, life, media
+              "~/org/"))                 ; personal (local only): todo, calendar, life, media
 
   ;; --- workflow --------------------------------------------------------------
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "CANCELLED(c)"))
+        '((sequence "TODO(t)" "STRT(s)" "|" "DONE(d)" "KILL(k)"))
+        org-blank-before-new-entry '((heading . nil)          ; never insert blank
+                                     (plain-list-item . nil)) ; lines around new entries
         org-deadline-warning-days 7             ; start warning 1 week out
         org-log-done 'time                      ; stamp completion time
         org-startup-with-inline-images t
-        org-image-actual-width '(600))
+        org-image-actual-width '(600)
+        org-agenda-timegrid-use-ampm t)         ; 12-hour AM/PM in the agenda, not 24h
 
   (add-hook 'org-mode-hook #'visual-line-mode)  ; soft-wrap prose like Obsidian
 
@@ -49,14 +65,43 @@
   (setq org-capture-templates
         '(("a" "School assignment (-> school.org, under CSC 230)" entry
            (file+olp "~/school/2026 Summer/school.org" "CSC 230" "Assignments")
-           "*** TODO %^{Name}  :%^{Type|exercise|homework|exam|project}:\nDEADLINE: %^{Due}t"
-           :empty-lines 1)
-          ("i" "Personal inbox" entry
-           (file "~/org/inbox.org")
-           "* %?\n%U" :empty-lines 1)
-          ("t" "Personal todo w/ deadline" entry
-           (file "~/org/inbox.org")
-           "* TODO %?\nDEADLINE: %^{Deadline}t" :empty-lines 1)))
+           "*** TODO %^{Name}  :%^{Type|exercise|homework|exam|project}:\nDEADLINE: %^{Due}t")
+          ("i" "Todo (-> todo.org)" entry
+           (file "~/org/todo.org")
+           "* TODO %?")
+          ("t" "Todo w/ deadline (-> todo.org)" entry
+           (file "~/org/todo.org")
+           "* TODO %?\nDEADLINE: %^{Deadline}t")
+          ("e" "Event (-> calendar.org)")
+          ("ea" "Appointment" entry
+           (file+headline "~/org/calendar.org" "Appointments")
+           "* %^{Event}\n%^T")
+          ("em" "Meeting" entry
+           (file+headline "~/org/calendar.org" "Meetings")
+           "* %^{Event}\n%^T")
+          ("es" "Soccer game" entry
+           (file+headline "~/org/calendar.org" "Soccer games")
+           "* %^{Event}\n%^T")
+          ("ev" "Movie" entry
+           (file+headline "~/org/calendar.org" "Movies")
+           "* %^{Event}\n%^T")
+          ("ee" "Misc event" entry
+           (file+headline "~/org/calendar.org" "Misc")
+           "* %^{Event}\n%^T")
+          ("r" "Daily reflection (-> reflections.org, under today)" entry
+           (file+olp+datetree "~/org/reflections.org")
+           "* Reflection
+** What's still on my mind?
+%?
+** What did I do today?
+
+** What went well or didn't go well?
+
+** What made me feel anxious or stressed (if anything)?
+
+** What would make tomorrow a good day?
+"
+           :empty-lines 1)))
 
   ;; --- one custom view; the default agenda (SPC a a) is your main dashboard --
   (setq org-agenda-custom-commands
