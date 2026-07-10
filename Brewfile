@@ -76,8 +76,6 @@ cask "nikitabobko/tap/aerospace", trusted: true
 cask "aldente"
 # Voice and text chat software
 cask "discord"
-# Text editor
-cask "emacs-app"
 # Web browser
 cask "firefox"
 cask "font-jetbrains-mono-nerd-font"
