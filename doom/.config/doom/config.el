@@ -134,7 +134,7 @@
 
 ;; M-x ledger-report. Paths are fixed so reports also work from the org file.
 (setq ledger-reports
-      '(("balance sheet" "hledger -f ~/org/finances.org bs")
+      '(("balance sheet" "hledger -f ~/org/finances.org bs --market")
         ("income statement (monthly)" "hledger -f ~/org/finances.org is --monthly")
         ("register" "hledger -f ~/org/finances.org register")
         ("account register" "hledger -f ~/org/finances.org register %(account)")))
