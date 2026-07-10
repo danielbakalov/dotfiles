@@ -123,6 +123,23 @@
         '(("▶" . "▼") ("▷" . "▽") ("▸" . "▾") ("▹" . "▿") ("▶" . "▼"))))
 
 ;; ===========================================================================
+;; Finances — hledger journal in ~/org/finances.org (org outline + ledger
+;; src blocks; hledger reads it directly since *, #, ; lines are comments)
+;; ===========================================================================
+;; ledger-mode drives hledger instead of ledger (hledger.org editor setup).
+;; C-c ' on a src block edits it with ledger-mode completion/alignment.
+(setq ledger-binary-path "hledger"
+      ledger-mode-should-check-version nil
+      ledger-report-links-in-register nil)
+
+;; M-x ledger-report. Paths are fixed so reports also work from the org file.
+(setq ledger-reports
+      '(("balance sheet" "hledger -f ~/org/finances.org bs")
+        ("income statement (monthly)" "hledger -f ~/org/finances.org is --monthly")
+        ("register" "hledger -f ~/org/finances.org register")
+        ("account register" "hledger -f ~/org/finances.org register %(account)")))
+
+;; ===========================================================================
 ;; A few keybinds so your .obsidian.vimrc muscle memory carries over.
 ;; (SPC leader, gf, C-o/C-i jumplist, / search are already native in Doom.)
 ;; ===========================================================================
