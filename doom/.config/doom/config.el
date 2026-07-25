@@ -5,18 +5,17 @@
       user-mail-address "dbbakalov@gmail.com")
 
 ;; ===========================================================================
-;; Appearance — mirror the kitty terminal (Gruvbox Material dark medium,
+;; Appearance — mirror the kitty terminal (Kanagawa Dragon,
 ;; JetBrainsMono NF 16pt, hidden titlebar, 12px padding)
 ;; ===========================================================================
-(setq doom-gruvbox-material-background "medium") ; must be set before the theme loads
-(setq doom-theme 'doom-gruvbox-material)
+(setq doom-theme 'kanagawa-dragon)
 (setq display-line-numbers-type 'relative)
 
 ;; kitty: font_size 16.0, modify_font cell_height 110%
 (setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 16.0))
 
-;; The gruvbox-material theme scales org headings (1.4x/1.2x/1.1x). Keep the
-;; heading colors but pin them to normal text size.
+;; Some themes scale org headings (1.1x–1.4x). Keep the heading colors but
+;; pin them to normal text size.
 (custom-set-faces!
   '(org-level-1 :height 1.0)
   '(org-level-2 :height 1.0)
@@ -37,12 +36,6 @@
 (setq org-directory "~/org/")
 
 (after! org
-  ;; --- habits: consistency graph in the agenda for habits.org entries --------
-  (add-to-list 'org-modules 'org-habit)
-  (require 'org-habit)
-  (setq org-extend-today-until 3    ; the day rolls over at 3am, not midnight
-        org-use-effective-time t)   ; late-night DONEs log against the day just ending
-
   ;; --- what the agenda scans -------------------------------------------------
   (setq org-agenda-files
         (list "~/school/2026 Summer/"   ; school (synced to Boox) — change when the semester rolls over
@@ -62,16 +55,60 @@
   (add-hook 'org-mode-hook #'visual-line-mode)  ; soft-wrap prose like Obsidian
 
   ;; --- capture: school stuff -> synced ~/school, personal -> local ~/org -----
+  ;; Target for the finance capture: point just before #+end_src of this
+  ;; month's ledger block in finances.org, creating the * YEAR / ** MONTH
+  ;; headings and block (in front of * Prices) when the month rolls over.
+  (defun my/finances-capture-target ()
+    (let ((year (format-time-string "%Y"))
+          (month (format-time-string "%B")))
+      (goto-char (point-min))
+      (if (re-search-forward (format "^\\* %s[ \t]*$" year) nil t)
+          (org-back-to-heading t)
+        (if (re-search-forward "^\\* Prices[ \t]*$" nil t)
+            (goto-char (match-beginning 0))
+          (goto-char (point-max))
+          (unless (bolp) (insert "\n")))
+        (insert (format "* %s\n" year))
+        (forward-line -1))
+      (let ((year-end (save-excursion (org-end-of-subtree t t) (point))))
+        (if (re-search-forward (format "^\\*\\* %s[ \t]*$" month) year-end t)
+            (let ((month-end (save-excursion (org-end-of-subtree t t) (point))))
+              (if (re-search-forward "^[ \t]*#\\+end_src" month-end t)
+                  (goto-char (match-beginning 0))
+                (goto-char month-end)
+                (insert "#+begin_src ledger\n#+end_src\n")
+                (forward-line -1)))
+          (goto-char year-end)
+          (insert (format "** %s\n#+begin_src ledger\n#+end_src\n" month))
+          (forward-line -1)))))
+
+  ;; The finance template can't align amounts itself (prompts expand after the
+  ;; template text), so right-align them to column 48 as the capture files.
+  (defun my/finances-align-posting ()
+    (when (equal (org-capture-get :key) "f")
+      (save-excursion
+        (goto-char (point-min))
+        (while (re-search-forward
+                "^\\([ \t]+[A-Za-z][A-Za-z:]*\\)[ \t]+\\(\\$[0-9][0-9.,]*\\)[ \t]*$" nil t)
+          (replace-match
+           (concat (match-string 1)
+                   (make-string (max 2 (- 48 (length (match-string 1))
+                                          (length (match-string 2))))
+                                ?\s)
+                   (match-string 2))
+           t t)))))
+  (add-hook 'org-capture-before-finalize-hook #'my/finances-align-posting)
+
   (setq org-capture-templates
         '(("a" "School assignment (-> school.org, under CSC 230)" entry
            (file+olp "~/school/2026 Summer/school.org" "CSC 230" "Assignments")
            "*** TODO %^{Name}  :%^{Type|exercise|homework|exam|project}:\nDEADLINE: %^{Due}t")
           ("i" "Todo (-> todo.org)" entry
            (file "~/org/todo.org")
-           "* TODO %?")
+           "* TODO %?" :prepend t)
           ("t" "Todo w/ deadline (-> todo.org)" entry
            (file "~/org/todo.org")
-           "* TODO %?\nDEADLINE: %^{Deadline}t")
+           "* TODO %?\nDEADLINE: %^{Deadline}t" :prepend t)
           ("e" "Event (-> calendar.org)")
           ("ea" "Appointment" entry
            (file+headline "~/org/calendar.org" "Appointments")
@@ -101,7 +138,14 @@
 
 ** What would make tomorrow a good day?
 "
-           :empty-lines 1)))
+           :empty-lines 1)
+          ("f" "Finance transaction (-> finances.org, this month)" plain
+           (file+function "~/org/finances.org" my/finances-capture-target)
+           "%^{Date|%<%Y-%m-%d>} %^{Payee | description}
+    %^{Account|Expenses:Food|Expenses:Transport|Expenses:Housing|Expenses:Utilities|Expenses:Subscriptions|Expenses:Health|Expenses:Shopping|Expenses:Fun|Expenses:Misc|Assets:Checking|Assets:Savings|Assets:Cash|Assets:VTI|Income:Allowance|Income:Dividends}    $%^{Amount}
+    %^{From account|Liabilities:Credit|Assets:Checking|Assets:Cash|Assets:Savings}
+"
+           :empty-lines-before 1 :immediate-finish t)))
 
   ;; --- one custom view; the default agenda (SPC a a) is your main dashboard --
   (setq org-agenda-custom-commands
@@ -131,6 +175,11 @@
 (setq ledger-binary-path "hledger"
       ledger-mode-should-check-version nil
       ledger-report-links-in-register nil)
+
+;; ledger-report needs a journal file; without this it falls back to
+;; buffer-file-name, which is nil in C-c ' src-edit buffers and errors.
+;; Buffer-local variable, so setq-default.
+(setq-default ledger-master-file "~/org/finances.org")
 
 ;; M-x ledger-report. Paths are fixed so reports also work from the org file.
 (setq ledger-reports

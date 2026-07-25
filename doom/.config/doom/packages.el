@@ -55,6 +55,8 @@
 ;; Prettier org rendering (headings, bullets, tables, agenda).
 (package! org-modern)
 
-;; Gruvbox Material lives in themes/doom-gruvbox-material-theme.el — vendored
-;; from Cardoso1994/doom-gruvbox-material-theme (not on MELPA, and the repo
-;; lacks the autoload cookie a `package!' install would need).
+;; Kanagawa Dragon theme (Fabiokleis/kanagawa-emacs, on MELPA as kanagawa-themes).
+(package! kanagawa-themes)
+
+;; Disable solaire-mode: give agenda/sidebars/popups the same bg as file buffers.
+(package! solaire-mode :disable t)

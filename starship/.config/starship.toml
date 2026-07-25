@@ -7,17 +7,17 @@ $golang\
 $character\
 """
 
-palette = "gruvbox_material"
+palette = "kanagawa_dragon"
 
-[palettes.gruvbox_material]
-blue = "#7daea3"
-violet = "#d3869b"
-green = "#a9b665"
-red = "#ea6962"
-yellow = "#d8a657"
-cyan = "#89b482"
-gray = "#928374"
-dark = "#665c54"
+[palettes.kanagawa_dragon]
+blue = "#8ba4b0"
+violet = "#8992a7"
+green = "#8a9a7b"
+red = "#c4746e"
+yellow = "#c4b28a"
+cyan = "#8ea4a2"
+gray = "#737c73"
+dark = "#393836"
 
 # Bare folder name only; stripping the ~ prefix makes the prompt just ❯ at home
 # ("~/" must come before "~" — substitutions run in order, before truncation)

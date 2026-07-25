@@ -21,12 +21,12 @@ default-root-container-orientation = 'auto'
 
 # --- Gaps (space between windows and screen edges) -------------------------
 [gaps]
-inner.horizontal = 2
-inner.vertical   = 2
-outer.left       = 2
-outer.bottom     = 2
-outer.top        = 2
-outer.right      = 2
+inner.horizontal = 10
+inner.vertical   = 10
+outer.left       = 10
+outer.bottom     = 10
+outer.top        = 10
+outer.right      = 10
 
 # --- Main keybindings ------------------------------------------------------
 # `alt` = the Option key. It's the AeroSpace mod key (i3 convention).
@@ -98,8 +98,6 @@ backspace    = ['close-all-windows-but-current', 'mode main']
 # --- Auto-assign apps to workspaces ---------------------------------------
 # Rules fire when a window is *detected* (opened). Apps already running before
 # a config reload may need a quit/reopen to snap into place.
-# Spotify is intentionally omitted — no rule keeps it unpinned (opens on the
-# active workspace, driven by media keys).
 [[on-window-detected]]
 if.app-id = 'net.kovidgoyal.kitty'
 run = 'move-node-to-workspace 1'
@@ -144,4 +142,16 @@ run = 'layout floating'
 
 [[on-window-detected]]
 if.app-id = 'com.apple.ActivityMonitor'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.MobileSMS'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.weather'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.spotify.client'
 run = 'layout floating'
