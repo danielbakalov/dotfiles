@@ -22,6 +22,11 @@
   '(org-level-3 :height 1.0))
 (setq-default line-spacing 0.1)
 
+;; Kanagawa leaves the whole org-agenda/org-modern face family undefined, so it
+;; renders in stock Emacs colors (PaleGreen, LightSkyBlue, chocolate1...) that
+;; aren't in the palette.  +theme.el pulls all of it back into Dragon's colors.
+(load! "+theme")
+
 ;; kitty: hide_window_decorations + window_padding_width 12.
 ;; AeroSpace manages windows, so losing the drag handle doesn't matter.
 (add-to-list 'default-frame-alist '(undecorated-round . t))
