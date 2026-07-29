@@ -1,9 +1,5 @@
 format = """
 $directory\
-$c\
-$python\
-$rust\
-$golang\
 $character\
 """
 
@@ -19,8 +15,6 @@ cyan = "#8ea4a2"
 gray = "#737c73"
 dark = "#393836"
 
-# Bare folder name only; stripping the ~ prefix makes the prompt just ❯ at home
-# ("~/" must come before "~" — substitutions run in order, before truncation)
 [directory]
 style = "bold blue"
 truncation_length = 1
@@ -29,26 +23,6 @@ format = "([$path]($style) )([$read_only]($read_only_style) )"
 [directory.substitutions]
 "~/" = ""
 "~" = ""
-
-[c]
-style = "cyan"
-symbol = " "
-format = "[$symbol]($style)"
-
-[python]
-style = "cyan"
-symbol = " "
-format = "[$symbol]($style)"
-
-[rust]
-style = "cyan"
-symbol = " "
-format = "[$symbol]($style)"
-
-[golang]
-style = "cyan"
-symbol = " "
-format = "[$symbol]($style)"
 
 [character]
 success_symbol = "[❯](bold green)"

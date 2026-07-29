@@ -3,8 +3,6 @@
 	email = dbbakalov@gmail.com
 	signingkey = ~/.ssh/id_ed25519.pub
 
-# Sign commits with the existing SSH key (no GPG needed). GitHub shows
-# "Verified" once the key is added there as a *signing* key.
 [gpg]
 	format = ssh
 
@@ -26,7 +24,6 @@
 [fetch]
 	prune = true
 
-# Remember how conflicts were resolved; auto-reapply on repeat conflicts.
 [rerere]
 	enabled = true
 
@@ -37,7 +34,6 @@
 [merge]
 	conflictStyle = zdiff3
 
-# Readable diffs via delta
 [core]
 	pager = delta
 
