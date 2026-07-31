@@ -1,15 +1,13 @@
 # dotfiles for my macbook
 
+desktop: aerospace + sketchybar
 
+terminal: kitty + tmux
 
-wm: aerospace
+shell: zsh + starship
 
-terminal: tmux, kitty
+editors: nvim (code), doom (org)
 
-shell: zsh
+tools: git, ssh, fastfetch
 
-prompt: starship
-
-note taking: doom
-
-coding: nvim
+theme: kanagawa dragon
