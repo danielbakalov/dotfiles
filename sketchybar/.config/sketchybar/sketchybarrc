@@ -54,7 +54,7 @@ sketchybar \
   icon.drawing=off \
   label.color="$BLUE" \
   label.font="$FONT:Bold:13.0" \
-  label.padding_left=10 \
+  label.padding_left=9 \
   script="$PLUGINS/front_app.sh"
 
 sketchybar \
