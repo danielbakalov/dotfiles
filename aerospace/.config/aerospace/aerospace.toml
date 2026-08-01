@@ -20,7 +20,7 @@ inner.horizontal = 4
 inner.vertical   = 4
 outer.left       = 4
 outer.bottom     = 4
-outer.top        = 35
+outer.top        = [{ monitor.'built-in retina display' = 5 }, 35]
 outer.right      = 4
 
 [mode.main.binding]
