@@ -16,12 +16,12 @@ default-root-container-layout = 'tiles'
 default-root-container-orientation = 'auto'
 
 [gaps]
-inner.horizontal = 4
-inner.vertical   = 4
-outer.left       = 4
-outer.bottom     = 4
-outer.top        = [{ monitor.'built-in retina display' = 5 }, 35]
-outer.right      = 4
+inner.horizontal = 15
+inner.vertical   = 15
+outer.left       = 15
+outer.bottom     = 15
+outer.top        = [{ monitor.'built-in retina display' = 15 }, 45]
+outer.right      = 15
 
 [mode.main.binding]
 
