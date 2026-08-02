@@ -96,7 +96,7 @@ run = 'move-node-to-workspace 5'
 
 [[on-window-detected]]
 if.app-id = 'com.hnc.Discord'
-run = 'move-node-to-workspace 9'
+run = 'move-node-to-workspace 6'
 
 [[on-window-detected]]
 if.app-id = 'com.apple.systempreferences'

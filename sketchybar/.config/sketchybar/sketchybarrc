@@ -3,9 +3,24 @@
 export CONFIG_DIR="$HOME/.config/sketchybar"
 source "$CONFIG_DIR/colors.sh"
 source "$CONFIG_DIR/icons.sh"
+source "$CONFIG_DIR/icon_map.sh"
 
 PLUGINS="$CONFIG_DIR/plugins"
 FONT="JetBrainsMono NF"
+APP_FONT="sketchybar-app-font"
+EMPTY_ICON="○"
+
+workspace_app() {
+  case "$1" in
+  1) echo "kitty" ;;
+  2) echo "Emacs" ;;
+  3) echo "Firefox" ;;
+  4) echo "Google Chrome" ;;
+  5) echo "Spark Desktop" ;;
+  6) echo "Discord" ;;
+  *) echo "" ;;
+  esac
+}
 
 sketchybar --bar \
   height=32 \
@@ -33,11 +48,22 @@ sketchybar --default \
 sketchybar --add event aerospace_workspace_change
 
 for sid in $(aerospace list-workspaces --all); do
+  app="$(workspace_app "$sid")"
+  if [ -n "$app" ]; then
+    __icon_map "$app"
+    space_icon="$icon_result"
+    space_icon_font="$APP_FONT:Regular:16.0"
+  else
+    space_icon="$EMPTY_ICON"
+    space_icon_font="$FONT:Bold:16.0"
+  fi
+
   sketchybar \
     --add item "space.$sid" left \
     --subscribe "space.$sid" aerospace_workspace_change \
     --set "space.$sid" \
-    icon="$sid" \
+    icon="$space_icon" \
+    icon.font="$space_icon_font" \
     icon.padding_left=9 \
     icon.padding_right=9 \
     label.drawing=off \
@@ -46,16 +72,6 @@ for sid in $(aerospace list-workspaces --all); do
     click_script="aerospace workspace $sid" \
     script="$PLUGINS/aerospace.sh $sid"
 done
-
-sketchybar \
-  --add item front_app left \
-  --subscribe front_app front_app_switched \
-  --set front_app \
-  icon.drawing=off \
-  label.color="$BLUE" \
-  label.font="$FONT:Bold:13.0" \
-  label.padding_left=9 \
-  script="$PLUGINS/front_app.sh"
 
 sketchybar \
   --add item clock right \
