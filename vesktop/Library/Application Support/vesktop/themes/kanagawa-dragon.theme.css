@@ -1,0 +1,352 @@
+/**
+ * @name Kanagawa Dragon
+ * @description Kanagawa Dragon for Vesktop — matches kitty, nvim, doom, sketchybar.
+ * @author danny
+ * @version 1.0.0
+ */
+
+/* ===========================================================================
+ *   backgrounds  #0d0c0c black  #12120f dim  #181616 bg   #1D1C19 -1
+ *                #282727 +1     #393836 +2
+ *   grays        #625e5a nontext #737c73 ash #7a8382 gray3 #a6a69c gray
+ *   foreground   #c5c9c5 white   #C8C093 old white (cursor/selection fg)
+ *   accents      #c4746e red     #b6927b orange #c4b28a yellow #87a987 green
+ *                #8ba4b0 blue    #8992a7 violet #8ea4a2 aqua   #a292a3 pink
+ *                #2D4F67 deep blue (selection bg)  #72A7BC link blue
+ * =========================================================================== */
+
+:root {
+  --kd-black:      #0d0c0c;
+  --kd-dim:        #12120f;
+  --kd-bg:         #181616;
+  --kd-bg-1:       #1D1C19;
+  --kd-bg-2:       #282727;
+  --kd-bg-3:       #393836;
+
+  --kd-nontext:    #625e5a;
+  --kd-ash:        #737c73;
+  --kd-gray3:      #7a8382;
+  --kd-gray:       #a6a69c;
+  --kd-fg:         #c5c9c5;
+  --kd-fg-old:     #C8C093;
+
+  --kd-red:        #c4746e;
+  --kd-orange:     #b6927b;
+  --kd-yellow:     #c4b28a;
+  --kd-green:      #87a987;
+  --kd-blue:       #8ba4b0;
+  --kd-violet:     #8992a7;
+  --kd-aqua:       #8ea4a2;
+  --kd-pink:       #a292a3;
+  --kd-deep-blue:  #2D4F67;
+  --kd-link:       #72A7BC;
+
+  /* Translucent overlays.  These stay translucent rather than becoming flat
+   * colors so that hover states still read correctly on top of whichever
+   * layer they land on (sidebar, chat, popout). */
+  --kd-mod-04:     rgba(197, 201, 197, 0.04);
+  --kd-mod-06:     rgba(197, 201, 197, 0.06);
+  --kd-mod-08:     rgba(197, 201, 197, 0.08);
+  --kd-mod-12:     rgba(197, 201, 197, 0.12);
+}
+
+/* ===========================================================================
+ * Token remap.
+ *
+ * Discord's current build uses the refreshed token names (--background-base-*,
+ * --text-*, --interactive-*).  The legacy names (--background-primary,
+ * --text-normal, ...) are kept at the bottom because unmigrated surfaces —
+ * some settings pages and most Vencord UI — still read them.
+ *
+ * :root.theme-dark rather than plain :root so this outranks Discord's own
+ * .theme-dark block regardless of stylesheet order.  Both themes are mapped so
+ * the app looks the same whether you're set to dark, light, or "sync with
+ * system".
+ * =========================================================================== */
+
+:root,
+:root.theme-dark,
+:root.theme-light,
+:root.visual-refresh {
+  /* --- Base layers ------------------------------------------------------
+   * lowest -> low is the depth ladder: server rail is darkest, chat is the
+   * #181616 you see in kitty and nvim. */
+  --background-base-lowest:        var(--kd-black);
+  --background-base-lower:         var(--kd-dim);
+  --background-base-low:           var(--kd-bg);
+  --chat-background-default:       var(--kd-bg);
+  --home-background:               var(--kd-bg);
+  --background-mobile-primary:     var(--kd-bg);
+
+  /* Discord layers a gradient over the base colors when one is set, using
+   * `var(--background-gradient-x, var(--background-base-y))`.  Pinning each
+   * gradient to the flat color it falls back to keeps every surface matte. */
+  --background-gradient-lowest:    var(--kd-black);
+  --background-gradient-lower:     var(--kd-dim);
+  --background-gradient-low:       var(--kd-dim);
+  --background-gradient-high:      var(--kd-black);
+  --background-gradient-highest:   var(--kd-bg);
+  --background-gradient-chat:      var(--kd-bg);
+
+  /* --- Raised surfaces: popouts, modals, tooltips, cards ---------------- */
+  --background-surface-high:       var(--kd-bg-1);
+  --background-surface-higher:     var(--kd-bg-2);
+  --background-surface-highest:    var(--kd-bg-3);
+  --custom-bg-surface-overlay:     var(--kd-bg-1);
+  --card-background-default:       var(--kd-bg-1);
+  --modal-background:              var(--kd-bg-1);
+  --background-scrim:              rgba(13, 12, 12, 0.7);
+  --background-code:               var(--kd-bg-1);
+
+  /* --- Overlay modifiers (hover / press / selection) -------------------- */
+  --background-mod-subtle:         var(--kd-mod-04);
+  --background-mod-muted:          var(--kd-mod-04);
+  --background-mod-normal:         var(--kd-mod-06);
+  --background-mod-strong:         var(--kd-mod-12);
+  --color-background-mod-normal:   var(--kd-mod-06);
+  --background-modifier-active:    var(--kd-bg-2);
+  --themes-dark-background-background-modifier-accent: var(--kd-bg-2);
+
+  --interactive-background-hover:    var(--kd-mod-06);
+  --interactive-background-active:   var(--kd-bg-2);
+  --interactive-background-selected: var(--kd-bg-2);
+  --message-background-hover:        var(--kd-mod-04);
+  --user-profile-background-hover:   var(--kd-mod-06);
+  --user-profile-overlay-background-hover: var(--kd-mod-06);
+  --user-profile-note-background-focus:    var(--kd-bg-2);
+  --user-profile-border:             var(--kd-bg-2);
+
+  /* --- Text ------------------------------------------------------------
+   * Message body sits at #c5c9c5 (nvim's Normal), muted text at #737c73
+   * (nvim's Comment), so the two ends of the ramp are literally the same
+   * two colors you read code in. */
+  --text-default:                  var(--kd-fg);
+  --text-strong:                   var(--kd-fg);
+  --text-muted:                    var(--kd-ash);
+  --text-subtle:                   var(--kd-nontext);
+  --text-invert:                   var(--kd-bg);
+  --text-link:                     var(--kd-link);
+  --text-brand:                    var(--kd-blue);
+  --white-500:                     var(--kd-fg);
+  --logo-primary:                  var(--kd-fg);
+
+  --channels-default:              var(--kd-gray3);
+  --channel-icon:                  var(--kd-nontext);
+  --channel-text-area-placeholder: var(--kd-nontext);
+
+  --interactive-normal:            var(--kd-gray);
+  --custom-interactive-normal:     var(--kd-gray);
+  --interactive-text-default:      var(--kd-ash);
+  --interactive-text-hover:        var(--kd-gray);
+  --interactive-text-active:       var(--kd-fg);
+
+  /* --- Icons ------------------------------------------------------------ */
+  --icon-default:                  var(--kd-gray);
+  --icon-strong:                   var(--kd-fg);
+  --icon-muted:                    var(--kd-ash);
+  --icon-subtle:                   var(--kd-nontext);
+  --interactive-icon-default:      var(--kd-ash);
+  --interactive-icon-hover:        var(--kd-fg);
+  --control-icon-only-icon-default: var(--kd-gray);
+  --control-secondary-icon-default: var(--kd-gray);
+
+  /* --- Borders ---------------------------------------------------------- */
+  --border-subtle:                 var(--kd-bg-2);
+  --border-muted:                  var(--kd-bg-2);
+  --border-normal:                 var(--kd-bg-3);
+  --border-strong:                 var(--kd-nontext);
+  --app-frame-border:              var(--kd-bg-2);
+  --shadow-border:                 var(--kd-bg-2);
+  --legacy-elevation-border:       var(--kd-bg-2);
+
+  /* --- Brand -----------------------------------------------------------
+   * Blurple is the one color with no Kanagawa equivalent.  #2D4F67 is the
+   * selection background from kitty.conf — dark enough that #c5c9c5 text on
+   * a filled button stays readable (~5:1), while --text-brand keeps the
+   * lighter #8ba4b0 for accent *text*, which would vanish at #2D4F67. */
+  --brand-500:                     var(--kd-deep-blue);
+  --brand-560:                     #223d50;
+  --brand-460:                     var(--kd-blue);
+  --brand-360:                     #7FB4CA;
+  --brand-500-hsl:                 205 39% 29%;
+  --background-brand:              var(--kd-deep-blue);
+  --control-brand-foreground:      var(--kd-fg);
+  --button-outline-brand-text:     var(--kd-blue);
+
+  /* --- Inputs & secondary controls -------------------------------------- */
+  --input-background-default:      var(--kd-bg-1);
+  --input-border-default:          var(--kd-bg-2);
+  --input-placeholder-text-default: var(--kd-nontext);
+
+  --control-secondary-background-default: transparent;
+  --control-secondary-background-hover:   var(--kd-mod-06);
+  --control-secondary-background-active:  var(--kd-bg-2);
+  --control-secondary-border-default:     var(--kd-bg-2);
+  --control-secondary-border-hover:       var(--kd-bg-3);
+  --control-secondary-border-active:      var(--kd-bg-3);
+  --control-icon-only-background-hover:   var(--kd-mod-06);
+  --control-icon-only-background-active:  var(--kd-bg-2);
+  --control-icon-only-border-hover:       var(--kd-bg-2);
+  --control-icon-only-border-active:      var(--kd-bg-3);
+
+  /* --- Status & feedback ------------------------------------------------
+   * Same reasoning as the error/warning/success block in doom/+theme.el:
+   * use Dragon's own muted red/yellow/green instead of the loud shared
+   * Kanagawa base colors. */
+  --status-positive:               var(--kd-green);
+  --status-positive-background:    var(--kd-green);
+  --status-warning:                var(--kd-yellow);
+  --text-status-online:            var(--kd-green);
+
+  --text-feedback-positive:        var(--kd-green);
+  --text-feedback-warning:         var(--kd-yellow);
+  --text-feedback-critical:        var(--kd-red);
+  --icon-feedback-positive:        var(--kd-green);
+  --icon-feedback-warning:         var(--kd-yellow);
+  --icon-feedback-critical:        var(--kd-red);
+  --icon-feedback-notification:    var(--kd-red);
+  --border-feedback-warning:       var(--kd-yellow);
+  --border-feedback-critical:      var(--kd-red);
+  --background-feedback-critical:  rgba(196, 116, 110, 0.14);
+  --background-feedback-warning:   rgba(196, 178, 138, 0.14);
+  --background-feedback-notification: var(--kd-red);
+
+  --notice-background-positive:    var(--kd-green);
+  --notice-text-positive:          var(--kd-bg);
+  --notice-background-critical:    var(--kd-red);
+  --notice-text-critical:          var(--kd-bg);
+
+  /* Unread / mention badges. */
+  --badge-background-default:      var(--kd-red);
+  --badge-text-default:            var(--kd-bg);
+  --badge-expressive-background-default: var(--kd-deep-blue);
+
+  /* A mention tints the row yellow, matching how the agenda ranks urgency
+   * by warmth in doom. */
+  --message-mentioned-background-default: rgba(196, 178, 138, 0.08);
+
+  /* --- Raw color scales -------------------------------------------------
+   * Components that reach past the semantic tokens for a literal shade. */
+  --green-230:  #a8c3a8;
+  --green-300:  #98b598;
+  --green-360:  var(--kd-green);
+  --green-560:  #6b8a6b;
+  --green-360-hsl: 120 15% 59%;
+  --green-560-hsl: 120 12% 48%;
+  --red-400:    var(--kd-red);
+  --red-400-hsl: 4 41% 60%;
+  --yellow-160: #d6c8a6;
+  --yellow-300: var(--kd-yellow);
+  --blue-200:   #b3c6ce;
+  --blue-345:   var(--kd-blue);
+
+  /* --- Legacy grayscale ------------------------------------------------
+   * Low number = light, high number = dark, same direction Discord uses. */
+  --primary-100: var(--kd-fg);
+  --primary-200: var(--kd-fg);
+  --primary-230: var(--kd-fg-old);
+  --primary-300: var(--kd-fg);
+  --primary-400: var(--kd-gray);
+  --primary-500: var(--kd-gray3);
+  --primary-600: var(--kd-nontext);
+  --primary-630: var(--kd-bg-3);
+  --primary-660: var(--kd-bg-2);
+  --primary-700: var(--kd-bg);
+  --primary-800: var(--kd-dim);
+  --primary-860: var(--kd-black);
+  --primary-100-hsl:  90 4% 78%;
+  --primary-300-hsl:  90 4% 78%;
+  --primary-400-hsl:  60 3% 63%;
+  --primary-500-hsl: 180 4% 49%;
+  --primary-600-hsl:  24 4% 37%;
+  --primary-700-hsl:   0 4% 9%;
+  --primary-800-hsl:  60 9% 6%;
+}
+
+/* ===========================================================================
+ * Legacy semantic tokens.  Not used by the main chat UI on this build, but
+ * Vencord's own settings panels and a few older Discord modals still read
+ * them, and those look out of place without this block.
+ * =========================================================================== */
+
+:root,
+:root.theme-dark,
+:root.theme-light {
+  --background-primary:        var(--kd-bg);
+  --background-secondary:      var(--kd-dim);
+  --background-secondary-alt:  var(--kd-black);
+  --background-tertiary:       var(--kd-black);
+  --background-accent:         var(--kd-deep-blue);
+  --background-floating:       var(--kd-bg-1);
+  --background-nested-floating: var(--kd-bg-2);
+  --background-message-hover:  var(--kd-mod-04);
+  --background-modifier-hover:    var(--kd-mod-06);
+  --background-modifier-selected: var(--kd-bg-2);
+  --background-modifier-accent:   var(--kd-bg-2);
+
+  --text-normal:      var(--kd-fg);
+  --header-primary:   var(--kd-fg);
+  --header-secondary: var(--kd-gray3);
+  --interactive-hover:  var(--kd-fg);
+  --interactive-active: var(--kd-fg);
+  --interactive-muted:  var(--kd-nontext);
+
+  --channeltextarea-background: var(--kd-bg-1);
+  --input-background:           var(--kd-bg-1);
+  --deprecated-panel-background: var(--kd-black);
+  --deprecated-quickswitcher-input-background: var(--kd-bg-1);
+  --activity-card-background:   var(--kd-bg-1);
+  --modal-footer-background:    var(--kd-bg);
+
+  --scrollbar-thin-thumb:  var(--kd-bg-3);
+  --scrollbar-thin-track:  transparent;
+  --scrollbar-auto-thumb:  var(--kd-bg-3);
+  --scrollbar-auto-track:  transparent;
+  --scrollbar-auto-scrollbar-color-thumb: var(--kd-bg-3);
+  --scrollbar-auto-scrollbar-color-track: transparent;
+}
+
+/* ===========================================================================
+ * Small structural bits the variables can't reach.
+ * =========================================================================== */
+
+/* Code blocks and inline code in JetBrainsMono, same as everywhere else.
+ * `NF` is the Nerd Font build — the fallback chain covers the case where the
+ * non-patched JetBrains Mono is what's installed. */
+:root {
+  --font-code: "JetBrainsMono NF", "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
+}
+
+/* Kitty draws no scrollbar at all; this is as close as Discord gets. */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--kd-bg-3);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--kd-nontext);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* ---------------------------------------------------------------------------
+ * OPTIONAL — the whole UI in JetBrainsMono, not just code.  Uncomment to try
+ * it.  It matches the terminal exactly but makes long messages noticeably
+ * harder to skim, which is why it's off by default.
+ * ------------------------------------------------------------------------- */
+/*
+:root {
+  --font-primary:  "JetBrainsMono NF", "JetBrains Mono", monospace;
+  --font-display:  "JetBrainsMono NF", "JetBrains Mono", monospace;
+  --font-headline: "JetBrainsMono NF", "JetBrains Mono", monospace;
+}
+*/
