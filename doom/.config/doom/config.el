@@ -23,7 +23,7 @@
 
 (after! org
   (setq org-agenda-files
-        (list "~/school/2026 Summer/"
+        (list "~/school/2026 Fall/"
               "~/org/"))
 
   (setq org-todo-keywords
@@ -78,10 +78,7 @@
   (add-hook 'org-capture-before-finalize-hook #'my/finances-align-posting)
 
   (setq org-capture-templates
-        '(("a" "School assignment (-> school.org, under CSC 230)" entry
-           (file+olp "~/school/2026 Summer/school.org" "CSC 230" "Assignments")
-           "*** TODO %^{Name}  :%^{Type|exercise|homework|exam|project}:\nDEADLINE: %^{Due}t")
-          ("i" "Todo (-> todo.org)" entry
+        '(("i" "Todo (-> todo.org)" entry
            (file "~/org/todo.org")
            "* TODO %?" :prepend t)
           ("t" "Todo w/ deadline (-> todo.org)" entry
@@ -97,6 +94,9 @@
           ("es" "Soccer game" entry
            (file+headline "~/org/calendar.org" "Soccer games")
            "* %^{Event}\n%^T")
+          ("ef" "FPL deadline" entry
+           (file+headline "~/org/calendar.org" "FPL")
+           "* GW%^{Gameweek} Deadline\n%^T")
           ("ev" "Movie" entry
            (file+headline "~/org/calendar.org" "Movies")
            "* %^{Event}\n%^T")
