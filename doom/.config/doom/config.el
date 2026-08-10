@@ -106,11 +106,13 @@
           ("r" "Daily reflection (-> reflections.org, under today)" entry
            (file+olp+datetree "~/org/reflections.org")
            "* Reflection
-** What's still on my mind?
-%?
 ** What did I do today?
+%?
+** Did I concentrate on tasks? If not, think of the reason why.
 
-** What made me feel anxious or stressed (if anything)?
+** Did I feel energized today? If not, think of the reason why.
+
+** Did I eat as expected today? If not, think of the reason why.
 
 ** What would make tomorrow a good day?
 "
