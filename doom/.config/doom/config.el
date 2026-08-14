@@ -22,9 +22,16 @@
 (setq org-directory "~/org/")
 
 (after! org
+  ;; applications.org is excluded: its APPLIED/OA/... keywords are TODO states,
+  ;; and we don't want 20+ open applications drowning the global agenda. It is
+  ;; still reachable via SPC a j, which rebinds org-agenda-files to just it.
+  ;; Directories are listed explicitly and scanned one level deep — a new
+  ;; subdirectory of ~/org/ has to be added here to reach the agenda.
   (setq org-agenda-files
-        (list "~/school/2026 Fall/"
-              "~/org/"))
+        (cons "~/school/2026 Fall/"
+              (seq-remove (lambda (f) (string-suffix-p "applications.org" f))
+                          (seq-mapcat (lambda (dir) (directory-files dir t "\\.org\\'"))
+                                      '("~/org/" "~/org/career/")))))
 
   (setq org-todo-keywords
         '((sequence "TODO(t)" "STRT(s)" "|" "DONE(d)" "KILL(k)"))
@@ -77,6 +84,61 @@
            t t)))))
   (add-hook 'org-capture-before-finalize-hook #'my/finances-align-posting)
 
+  (defun my/application-age ()
+    "Days since the APPLIED property of the entry at point, or nil if unset."
+    (let ((applied (org-entry-get nil "APPLIED")))
+      (when applied
+        (- (org-today) (org-time-string-to-absolute applied)))))
+
+  (defun my/application-skip (which days)
+    "Agenda skip function for applications.org.
+WHICH is `stale' (keep only entries applied at least DAYS ago) or
+`fresh' (keep everything newer than that, plus entries with no
+APPLIED date). Returns the position to skip to, or nil to keep."
+    (let ((age (my/application-age)))
+      (unless (pcase which
+                ('stale (and age (>= age days)))
+                ('fresh (or (null age) (< age days))))
+        (org-entry-end-position))))
+
+  (defun my/application-record-stage ()
+    "Remember how far an application got before it died.
+A TODO keyword only holds one value, so moving OA -> REJECTED would
+otherwise erase the fact that there ever was an OA.  On the way into a
+closed keyword (OFFER/REJECTED/GHOSTED/KILL) this stores the live stage
+we came from in the STAGE property; moving back to a live keyword clears
+it again.  `org-state' (new keyword) and `org-last-state' (previous one)
+are bound by `org-todo' while this hook runs."
+    (when (and buffer-file-name
+               (string-suffix-p "applications.org" buffer-file-name))
+      (cond
+       ;; Back in the running — whatever we recorded is stale.
+       ((member org-state org-not-done-keywords)
+        (org-entry-delete nil "STAGE"))
+       ;; Closing out from a live stage.  Terminal -> terminal (say
+       ;; REJECTED -> GHOSTED) falls through, keeping the original stage.
+       ((and (member org-state org-done-keywords)
+             (member org-last-state org-not-done-keywords))
+        (org-entry-put nil "STAGE" org-last-state)))))
+  (add-hook 'org-after-todo-state-change-hook #'my/application-record-stage)
+
+  (defun org-dblock-write:app-count (_params)
+    "Write the total number of application entries in the current file.
+Counts level-1 headings carrying a TODO keyword, so the comment
+header and any stray notes are ignored."
+    (let ((n 0))
+      (save-excursion
+        (org-map-entries (lambda () (when (org-get-todo-state) (setq n (1+ n))))
+                         "LEVEL=1" 'file))
+      (insert (format "Total: %d applications" n))))
+
+  (defun my/applications-refresh-count ()
+    "Refresh the app-count dynamic block whenever applications.org is saved."
+    (when (and buffer-file-name
+               (string-suffix-p "applications.org" buffer-file-name))
+      (org-update-all-dblocks)))
+  (add-hook 'before-save-hook #'my/applications-refresh-count)
+
   (setq org-capture-templates
         '(("i" "Todo (-> todo.org)" entry
            (file "~/org/todo.org")
@@ -123,13 +185,36 @@
     %^{Account|Expenses:Food|Expenses:Transport|Expenses:Housing|Expenses:Utilities|Expenses:Subscriptions|Expenses:Health|Expenses:Shopping|Expenses:Fun|Expenses:Misc|Assets:Checking|Assets:Savings|Assets:Cash|Assets:VTI|Income:Allowance|Income:Dividends}    $%^{Amount}
     %^{From account|Liabilities:Credit|Assets:Checking|Assets:Cash|Assets:Savings}
 "
-           :empty-lines-before 1 :immediate-finish t)))
+           :empty-lines-before 1 :immediate-finish t)
+          ("j" "Internship application (-> applications.org)" entry
+           (file "~/org/career/applications.org")
+           "* APPLIED %^{Company} — %^{Role}
+:PROPERTIES:
+:APPLIED:  [%<%Y-%m-%d %a>]
+:SOURCE:   %^{Source|cold|referral|careerfair|handshake|recruiter|hackathon}
+:LINK:     %^{Posting URL}
+:LOC:      %^{Location}
+:TERM:     %^{Term|Summer 2027|Fall 2026|Spring 2027}
+:END:
+%?
+"
+           :prepend t)))
 
   (setq org-agenda-custom-commands
         '(("o" "Open items by due date"
            ((todo "TODO"
                   ((org-agenda-overriding-header "Open — by due date")
-                   (org-agenda-sorting-strategy '(deadline-up)))))))))
+                   (org-agenda-sorting-strategy '(deadline-up))))))
+          ("j" "Internship applications"
+           ((todo "OA|PHONE|ONSITE"
+                  ((org-agenda-overriding-header "In process")))
+            (todo "APPLIED"
+                  ((org-agenda-overriding-header "Stale — applied 21+ days ago, no response")
+                   (org-agenda-skip-function '(my/application-skip 'stale 21))))
+            (todo "APPLIED"
+                  ((org-agenda-overriding-header "Waiting — applied recently")
+                   (org-agenda-skip-function '(my/application-skip 'fresh 21)))))
+           ((org-agenda-files '("~/org/career/applications.org")))))))
 
 (use-package! org-modern
   :after org
