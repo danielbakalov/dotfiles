@@ -12,8 +12,8 @@ EMPTY_ICON="○"
 
 workspace_app() {
   case "$1" in
-  1) echo "kitty" ;;
-  2) echo "Emacs" ;;
+  1) echo "Emacs" ;;
+  2) echo "kitty" ;;
   3) echo "Firefox" ;;
   4) echo "Google Chrome" ;;
   5) echo "Spark Desktop" ;;

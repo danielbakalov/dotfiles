@@ -75,11 +75,11 @@ f            = ['layout floating tiling', 'mode main'] # toggle floating for win
 backspace    = ['close-all-windows-but-current', 'mode main']
 
 [[on-window-detected]]
-if.app-id = 'net.kovidgoyal.kitty'
+if.app-id = 'org.gnu.Emacs'
 run = 'move-node-to-workspace 1'
 
 [[on-window-detected]]
-if.app-id = 'org.gnu.Emacs'
+if.app-id = 'net.kovidgoyal.kitty'
 run = 'move-node-to-workspace 2'
 
 [[on-window-detected]]
