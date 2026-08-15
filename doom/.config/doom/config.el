@@ -170,7 +170,6 @@ header and any stray notes are ignored."
            "* Reflection
 ** What did I do today?
 %?
-
 ** Is there anything still on my mind?
 
 ** Did I concentrate on tasks tody?
