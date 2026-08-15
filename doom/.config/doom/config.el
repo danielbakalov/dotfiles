@@ -170,11 +170,12 @@ header and any stray notes are ignored."
            "* Reflection
 ** What did I do today?
 %?
-** Did I concentrate on tasks? If not, think of the reason why.
 
-** Did I feel energized today? If not, think of the reason why.
+** Is there anything still on my mind?
 
-** Did I eat as expected today? If not, think of the reason why.
+** Did I concentrate on tasks tody?
+
+** Did I feel energized today today?
 
 ** What would make tomorrow a good day?
 "
