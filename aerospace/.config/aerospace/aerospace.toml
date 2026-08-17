@@ -95,10 +95,6 @@ if.app-id = 'com.readdle.SparkDesktop'
 run = 'move-node-to-workspace 5'
 
 [[on-window-detected]]
-if.app-id = 'dev.vencord.vesktop'
-run = 'move-node-to-workspace 6'
-
-[[on-window-detected]]
 if.app-id = 'com.apple.systempreferences'
 run = 'layout floating'
 

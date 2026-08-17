@@ -17,7 +17,6 @@ workspace_app() {
   3) echo "Firefox" ;;
   4) echo "Google Chrome" ;;
   5) echo "Spark Desktop" ;;
-  6) echo "Vesktop" ;;
   *) echo "" ;;
   esac
 }

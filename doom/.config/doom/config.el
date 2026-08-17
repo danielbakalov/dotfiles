@@ -22,16 +22,41 @@
 (setq org-directory "~/org/")
 
 (after! org
-  ;; applications.org is excluded: its APPLIED/OA/... keywords are TODO states,
-  ;; and we don't want 20+ open applications drowning the global agenda. It is
-  ;; still reachable via SPC a j, which rebinds org-agenda-files to just it.
+  ;; The agenda is split into three worlds, each with its own dispatcher key.
+  ;; Every one of those custom commands rebinds org-agenda-files to just its
+  ;; own slice, which is what keeps them from bleeding into each other:
+  ;;   SPC a t  general todos  — my/general-agenda-files
+  ;;   SPC a s  school work    — my/school-agenda-files
+  ;;   SPC a j  applications   — ~/org/applications.org
+  ;; The global views (SPC a a, SPC a o) see the first two together.
+  ;; Two files under ~/org/ are excluded from org-agenda-files entirely
+  ;; (see my/agenda-excluded-files):
+  ;;   applications.org — its APPLIED/OA/... keywords are TODO states, and we
+  ;;     don't want 20+ open applications drowning the global agenda.
+  ;;   study-log.org    — written by the `study` CLI; pure clock data with no
+  ;;     TODOs, so it has nothing to contribute to an agenda.
   ;; Directories are listed explicitly and scanned one level deep — a new
   ;; subdirectory of ~/org/ has to be added here to reach the agenda.
-  (setq org-agenda-files
-        (cons "~/school/2026 Fall/"
-              (seq-remove (lambda (f) (string-suffix-p "applications.org" f))
-                          (seq-mapcat (lambda (dir) (directory-files dir t "\\.org\\'"))
-                                      '("~/org/" "~/org/career/")))))
+  (defconst my/school-agenda-files '("~/school/2026 Fall/")
+    "Org files for the current semester.
+A directory is scanned one level deep by the agenda, so course
+subdirectories are ignored — only school.org itself is read.
+Bump the semester here each term.")
+
+  (defconst my/agenda-excluded-files '("applications.org" "study-log.org")
+    "Basenames under ~/org/ that stay out of the agenda entirely.")
+
+  (defconst my/general-agenda-files
+    (seq-remove (lambda (f)
+                  (seq-some (lambda (name) (string-suffix-p name f))
+                            my/agenda-excluded-files))
+                (seq-mapcat (lambda (dir) (directory-files dir t "\\.org\\'"))
+                            '("~/org/")))
+    "Life outside school: everything under ~/org/ but the excluded files.
+Expanded once at startup, so a newly created file needs a restart
+before it shows up.")
+
+  (setq org-agenda-files (append my/school-agenda-files my/general-agenda-files))
 
   (setq org-todo-keywords
         '((sequence "TODO(t)" "STRT(s)" "|" "DONE(d)" "KILL(k)"))
@@ -187,7 +212,7 @@ header and any stray notes are ignored."
 "
            :empty-lines-before 1 :immediate-finish t)
           ("j" "Internship application (-> applications.org)" entry
-           (file "~/org/career/applications.org")
+           (file "~/org/applications.org")
            "* APPLIED %^{Company} — %^{Role}
 :PROPERTIES:
 :APPLIED:  [%<%Y-%m-%d %a>]
@@ -201,10 +226,23 @@ header and any stray notes are ignored."
            :prepend t)))
 
   (setq org-agenda-custom-commands
-        '(("o" "Open items by due date"
-           ((todo "TODO"
+        '(("o" "Open items by due date (everything)"
+           ((todo "TODO|STRT"
                   ((org-agenda-overriding-header "Open — by due date")
                    (org-agenda-sorting-strategy '(deadline-up))))))
+          ;; Shadows the built-in "t" (global todo list), which showed school
+          ;; and general items together.
+          ("t" "General todos"
+           ((todo "TODO|STRT"
+                  ((org-agenda-overriding-header "General todos — by due date")
+                   (org-agenda-sorting-strategy '(deadline-up)))))
+           ((org-agenda-files my/general-agenda-files)))
+          ;; Shadows the built-in "s" (search for keywords) — that's still on S.
+          ("s" "School assignments"
+           ((todo "TODO|STRT"
+                  ((org-agenda-overriding-header "Assignments — by due date")
+                   (org-agenda-sorting-strategy '(deadline-up)))))
+           ((org-agenda-files my/school-agenda-files)))
           ("j" "Internship applications"
            ((todo "OA|PHONE|ONSITE"
                   ((org-agenda-overriding-header "In process")))
@@ -214,7 +252,7 @@ header and any stray notes are ignored."
             (todo "APPLIED"
                   ((org-agenda-overriding-header "Waiting — applied recently")
                    (org-agenda-skip-function '(my/application-skip 'fresh 21)))))
-           ((org-agenda-files '("~/org/career/applications.org")))))))
+           ((org-agenda-files '("~/org/applications.org")))))))
 
 (use-package! org-modern
   :after org
