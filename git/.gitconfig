@@ -56,3 +56,19 @@
 [credential "https://gist.github.com"]
 	helper = 
 	helper = !/opt/homebrew/bin/gh auth git-credential
+
+# --- NC State GitHub orgs always use the managed account's key ---
+# Applies at clone time too (includeIf can't fire before a repo exists).
+[url "git@github-ncstate:ncstate-csc-coursework/"]
+	insteadOf = https://github.com/ncstate-csc-coursework/
+	insteadOf = git@github.com:ncstate-csc-coursework/
+[url "git@github-ncstate:ncstate-csc/"]
+	insteadOf = https://github.com/ncstate-csc/
+	insteadOf = git@github.com:ncstate-csc/
+[url "git@github-ncstate:ncstate-community/"]
+	insteadOf = https://github.com/ncstate-community/
+	insteadOf = git@github.com:ncstate-community/
+
+# --- NC State coursework: any ~/csc* directory uses the NCSU identity ---
+[includeIf "gitdir/i:~/csc*/"]
+	path = ~/dotfiles/git/.gitconfig-ncsu
