@@ -1,6 +1,0 @@
-# NC State coursework identity.
-# Activated by the [includeIf] rule in .gitconfig for repos under ~/csc*/
-[user]
-	name = Daniel Bakalov
-	email = dbbakalo@ncsu.edu
-	signingkey = ~/.ssh/id_ncstate.pub
