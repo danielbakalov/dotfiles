@@ -117,7 +117,3 @@ run = 'layout floating'
 [[on-window-detected]]
 if.app-id = 'com.apple.weather'
 run = 'layout floating'
-
-[[on-window-detected]]
-if.app-id = 'com.spotify.client'
-run = 'layout floating'
