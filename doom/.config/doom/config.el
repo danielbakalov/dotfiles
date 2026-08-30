@@ -66,6 +66,8 @@ before it shows up.")
         org-log-done 'time
         org-startup-with-inline-images t
         org-image-actual-width '(600)
+        org-agenda-start-day "0d"
+        org-agenda-start-on-weekday nil
         org-agenda-timegrid-use-ampm t)
 
   (add-hook 'org-mode-hook #'visual-line-mode)
