@@ -156,6 +156,50 @@ before it shows up.")
 "
            :empty-lines-before 1 :immediate-finish t)))
 
+  ;; Line layout for SPC a s.  Each line reads
+  ;;   Thu 11/05  11:30a  3d      MA 305   TODO Assignment 9 - WebWork  :homework:
+  ;; The course comes from the :CATEGORY: property on each course heading
+  ;; in school.org (inherited by everything under it); the tag stays where
+  ;; Org puts it, at the right edge.
+  (defun my/agenda-due-column ()
+    "Date, time and days-left text for the entry at point, 26 chars wide.
+Called from `org-agenda-prefix-format' via %(...), which evaluates it
+with point on the heading in the Org file."
+    (let ((dl (org-entry-get nil "DEADLINE")))
+      (if (not dl)
+          (format "%-26s" "no due date")
+        (let ((days (- (org-time-string-to-absolute dl) (org-today)))
+              (clock (if (string-match "\\([0-9]+\\):\\([0-9]+\\)" dl)
+                         (let ((h (string-to-number (match-string 1 dl)))
+                               (m (string-to-number (match-string 2 dl))))
+                           (format "%2d:%02d%s" (1+ (mod (1- h) 12)) m
+                                   (if (< h 12) "a" "p")))
+                       "")))
+          (format "%s  %6s  %-7s"
+                  (format-time-string "%a %m/%d" (org-time-string-to-time dl))
+                  clock
+                  (cond ((= days 0) "today")
+                        ((< days 0) (format "%dd ago" (- days)))
+                        (t (format "%dd" days))))))))
+
+  (defun my/agenda-cmp-deadline (a b)
+    "Order agenda lines A and B by DEADLINE, time of day included.
+The built-in `deadline-up' compares dates only, so items due the same
+day would otherwise stay in file order.  Entries without a deadline
+sort last."
+    (let ((ta (my/agenda-line-deadline a))
+          (tb (my/agenda-line-deadline b)))
+      (cond ((and ta tb) (cond ((time-less-p ta tb) -1)
+                               ((time-less-p tb ta) 1)))
+            (ta -1)
+            (tb 1))))
+
+  (defun my/agenda-line-deadline (line)
+    "DEADLINE of the entry behind agenda LINE as a Lisp time, or nil."
+    (let* ((marker (get-text-property 0 'org-marker line))
+           (dl (and marker (org-entry-get marker "DEADLINE"))))
+      (and dl (org-time-string-to-time dl))))
+
   (setq org-agenda-custom-commands
         '(("o" "Open items by due date (everything)"
            ((todo "TODO|STRT"
@@ -172,7 +216,9 @@ before it shows up.")
           ("s" "School assignments"
            ((todo "TODO|STRT"
                   ((org-agenda-overriding-header "Assignments — by due date")
-                   (org-agenda-sorting-strategy '(deadline-up)))))
+                   (org-agenda-prefix-format '((todo . " %(my/agenda-due-column)  %-9c")))
+                   (org-agenda-cmp-user-defined #'my/agenda-cmp-deadline)
+                   (org-agenda-sorting-strategy '(user-defined-up)))))
            ((org-agenda-files my/school-agenda-files)))))
 
   ;; Org never writes to disk on its own, so an edit made from the agenda
